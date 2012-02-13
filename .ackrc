@@ -1,0 +1,5 @@
+# Use pages by default
+--pager=less
+
+# Ignore kohana cache
+--ignore-dir=www/application/cache
