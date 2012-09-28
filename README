@@ -1,1 +1,20 @@
 Dotfiles!
+
+
+VIM
+====
+
+Installation
+------------
+
+Clone and run Vundle install:
+
+```
+:BundleInstall
+```
+
+
+Notable keyboard mappings
+-------------------------
+
+<leader>p   Toggle paste mode
