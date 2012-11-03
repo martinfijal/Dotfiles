@@ -2,10 +2,7 @@
 " VIM config using vundle for package managment
 ""
 
-
-""---------------------------------------------------------
-"" General
-""---------------------------------------------------------
+"" General ------------------------------------------- {{{
 
 set encoding=utf-8
 set nocompatible
@@ -13,10 +10,8 @@ filetype plugin indent on
 
 let mapleader=","
 let g:mapleader=","
-
-""---------------------------------------------------------
-"" Text and indenting
-""---------------------------------------------------------
+" }}}
+"" Text and indenting -------------------------------- {{{
 set expandtab                      " Space instead of tabs
 
 " Smart tab usage
@@ -33,10 +28,17 @@ set autoindent
 set smartindent
 " No word wrap
 set nowrap
-
-""---------------------------------------------------------
-"" Interface
-""---------------------------------------------------------
+" }}}
+"" Wild ignore ------------------------------------ {{{
+" Turn and config wild menu
+set wildmenu
+set wildmode=longest,full        " Stop at longest unique prefix
+set wildignore=*.o,*.pyc
+set wildignore+=.git/*,.hg/*,.svn/*
+" Work files
+set wildignore+=application/cache/**,application/logs/**,application/vendor/**
+" }}}
+"" Interface ----------------------------------- {{{
 
 " Allow switching buffer without saving
 set hidden
@@ -53,13 +55,8 @@ set incsearch                    " Incremental search
 set scrolloff=3                  " Lines above of below when scroll start
 set scrolljump=5                 " Chars left and right before scroll start
 
-" Turn and config wild menu
-set wildmenu
-set wildmode=longest,full        " Stop at longest unique prefix
-set wildignore=*.o,*.pyc
-set wildignore+=.git/*,.hg/*,.svn/*
-" Work files
-set wildignore+=application/cache/**,application/logs/**,application/vendor/**
+" No highlighting for long lines
+set synmaxcol=500
 
 " Ruler
 set ruler
@@ -96,9 +93,8 @@ set lazyredraw
 
 set nostartofline                    " Preserve col when repositioning cursor
 
-""---------------------------------------------------------
-"" GUI/CLI settings
-""---------------------------------------------------------
+" }}}
+"" GUI/CLI settings ---------------------------------- {{{
 syntax on
 set t_Co=256
 set background=dark
@@ -132,16 +128,14 @@ else
 	vnoremap > >gv
 endif
 
-""-----------------------------------------------
-""    Backups
-""-----------------------------------------------
+" }}}
+"" Backups ----------------------------------------- {{{
 set nobackup
 set nowb
 set noswapfile
 
-""---------------------------------------------------------
-"" Plugins
-""---------------------------------------------------------
+" }}}
+"" Plugins --------------------------------------------- {{{
 
 " Start vundle
 set rtp+=~/.vim/bundle/vundle/
@@ -167,10 +161,8 @@ Bundle 'vim-scripts/bufkill.vim'
 
 filetype plugin indent on
 
-
-""---------------------------------------------------------
-"" Plugin settings
-""---------------------------------------------------------
+" }}}
+"" Plugin settings ------------------------------------------- {{{
 
 "" CtrlP
 let g:ctrlp_working_path_mode = 0             " Do not change PWD
@@ -186,10 +178,8 @@ let python_highlight_all = 1
 "" Powerline
 let g:Powerline_stl_path_style = 'short'
 
-
-"----------------
-" Plugin keyboard mappings
-"----------------
+"" }}}
+"" Plugin keyboard mappings ------------------------------------- {{{
 
 "" Ack.vim
 map <leader>g :Ack!
@@ -198,15 +188,23 @@ map <leader>g :Ack!
 nmap <silent> <tab> :CtrlPBuffer<cr>
 let g:ctrlp_map = '<c-t>'
 
+"" }}}
+"" Autocommand and Commands -------------------------------------- {{{
 
-""-----------------------------------------------
-""    Autocommand and Commands
-""-----------------------------------------------
-
-" Python
-au FileType python setlocal nocindent nosmartindent tw=80 ts=4 sw=4 colorcolumn=80
-au FileType python syn keyword pythonDecorator True None False self
-au FileType python map <buffer> <F5> <ESC>:w<CR>:!python %<CR>
+" Python {{{
+augroup ft_python
+    au!
+    au filetype python setlocal nocindent nosmartindent tw=80 ts=4 sw=4 colorcolumn=80
+    au filetype python syn keyword pythondecorator true none false self
+    au filetype python map <buffer> <f5> <esc>:w<cr>:!python %<cr>
+augroup END
+" }}}
+" Vim {{{
+augroup ft_vim
+    au!
+    au FileType vim setlocal foldmethod=marker
+augroup END
+" }}}
 
 " Extra PHP file types
 autocmd BufNewFile,BufRead *.inc setlocal ft=php
@@ -227,18 +225,8 @@ autocmd BufNewFile,BufRead svn-commit.tmp setlocal ft=svn nocursorline spell
 "Git commit
 autocmd BufNewFile,BufRead COMMIT_EDITMSG setlocal nocursorline spell
 
-
-" Close all open buffers
-command Closeall call CloseAllBuffers()                                         
-function! CloseAllBuffers()
-    for b in range(0, bufnr('$'))
-        exe 'q!'
-    endfor
-endfun 
-
-""---------------------------------------------------------
-"" Keyboard mappings
-""---------------------------------------------------------
+" }}}
+"" Keyboard mappings ------------------------------------ {{{
 
 " Escape insert mode
 imap <silent> jj <esc> 
@@ -259,11 +247,14 @@ nmap <leader>bd :Bclose<cr>
 map <silent> <leader>p :set paste!<cr>
 
 " w!!! saved file using sudo
-cmap w!!! w !sudo tee % >/dev/null
+cnoremap w!!! w !sudo tee % >/dev/null
 
 " Quit
-nmap <leader>qq :call CloseAllBuffers()<cr>
+nnoremap <leader>qq :call CloseAllBuffers()<cr>
 
+" Folding with space
+nnoremap <Space> za
+vnoremap <Space> za
 
 " Fix my very common mistakes
 command W write
@@ -272,13 +263,49 @@ command Wq wq
 command WQ wq
 
 " Move between windows
-map <silent> <C-h> <C-W>h
-map <silent> <C-j> <C-W>j
-map <silent> <C-k> <C-W>k
-map <silent> <C-l> <C-W>l
+noremap <silent> <C-h> <C-W>h
+noremap <silent> <C-j> <C-W>j
+noremap <silent> <C-k> <C-W>k
+noremap <silent> <C-l> <C-W>l
+
+" Move in buffers
+noremap H ^
+noremap L $
+vnoremap L g_
+
+" Bash-like ctrl-a/e
+inoremap <C-a> <esc>I
+inoremap <C-e> <esc>A
+noremap <C-a> ^
+noremap <C-e> $
+
+" Open quickfix window for last search
+nnoremap <silent> <leader>/ :execute 'vimgrep /'.@/.'/g %'<cr>:copen<cr>
+
+" Source
+vnoremap <leader>S y:execute @@<cr>:echo 'Sourced selection.'<cr>
+nnoremap <leader>S ^vg_y:execute @@<cr>:echo 'Sourced line.'<cr>
 
 " Resize windows
-nmap <silent> <S-Left> <C-w><
-map <silent> <C-Up> <C-W>-
-map <silent> <C-Down> <C-W>+
-nmap <silent> <S-Right> <C-w>>
+noremap <silent> <C-Left> <C-w><
+noremap <silent> <C-Up> <C-W>-
+noremap <silent> <C-Down> <C-W>+
+noremap <silent> <C-Right> <C-w>>
+
+" }}}
+"" Quick editing ----------------------------- {{{
+
+nnoremap <leader>ev :vsplit $MYVIMRC<cr>
+nnoremap <leader>eb :vsplit ~/.bashrc<cr>
+" }}}
+
+
+"" Misc --------------------------------- {{{
+" Close all open buffers
+command Closeall call CloseAllBuffers()                                         
+function! CloseAllBuffers()
+    for b in range(0, bufnr('$'))
+        exe 'q!'
+    endfor
+endfun 
+" }}}
