@@ -194,9 +194,13 @@ let g:ctrlp_map = '<c-t>'
 " Python {{{
 augroup ft_python
     au!
-    au filetype python setlocal nocindent nosmartindent tw=80 ts=4 sw=4 colorcolumn=80
+    au filetype python setlocal nocindent nosmartindent tw=80 ts=4 sw=4
     au filetype python syn keyword pythondecorator true none false self
     au filetype python map <buffer> <f5> <esc>:w<cr>:!python %<cr>
+
+    if has('colorcolumn')
+        au filetype python setlocal colorcolumn=80
+    endif
 augroup END
 " }}}
 " Vim {{{
