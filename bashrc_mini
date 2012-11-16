@@ -1,0 +1,11 @@
+#
+# Mini-bash file for remote servers
+#
+
+PS1='\e[0;31m$(hostname -f):\w\$ \e[m'
+
+HISTCONTROL=ignoredups
+shopt -s histappend
+
+# Alias
+alias ll='ls -la'
