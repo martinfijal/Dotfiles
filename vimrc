@@ -149,8 +149,10 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'wincent/Command-T'
 Bundle 'mileszs/ack.vim'
 Bundle 'gregsexton/gitv'
-Bundle 'chrismetcalf/vim-yankring'
+""Bundle 'chrismetcalf/vim-yankring'
+Bundle 'vim-scripts/YankRing.vim'
 Bundle 'Lokaltog/vim-powerline'
+Bundle 'skwp/vim-easymotion'
 Bundle 'scrooloose/syntastic'
 Bundle 'tmhedberg/matchit'
 Bundle 'ervandew/supertab'
@@ -313,3 +315,10 @@ function! CloseAllBuffers()
     endfor
 endfun 
 " }}}
+
+
+
+" Patched fonts on Mac
+if has('gui_macvim')
+    let g:Powerline_symbols = 'fancy'
+end
