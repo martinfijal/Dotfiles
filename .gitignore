@@ -2,3 +2,5 @@
 .vim/doc/tags
 .vim/.netrwhist
 .vim/bundle
+
+config/nvim/plugged
