@@ -14,10 +14,9 @@ else
   " ALL OTHER NVIM
   source $HOME/.config/nvim/plugin_settings.vim
   source $HOME/.config/nvim/keymappings.vim
-  source $HOME/.config/nvim/coc.vim
+  source $HOME/.config/nvim/lsp.vim
 
-  colorscheme onedark
-
+  colorscheme wombat256grf
 
 endif
 
@@ -50,3 +49,8 @@ function! s:all_files()
   \        "v:val !~ 'fugitive:\\|NERD_tree\\|^/tmp/\\|.git/'"),
   \ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'bufname(v:val)'))
 endfunction
+
+
+" TODO: move autocommand to own file
+"
+autocmd FileType hcl setlocal shiftwidth=2 softtabstop=2 expandtab

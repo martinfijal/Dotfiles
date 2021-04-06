@@ -8,13 +8,22 @@ if !exists('g:vscode')
 
 
     "------------------------
+    " Fuzzy
+    "------------------------
+    nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+    nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+    nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+    nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+
+
+    "------------------------
     " Ctrlp
     "------------------------
     " Ignore files in .gitignore
     let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 
     "------------------------
-    " Lightline 
+    " Lightline
     "------------------------
     " Hide mode since it's in the statusline
     set noshowmode
@@ -38,9 +47,9 @@ if !exists('g:vscode')
     let g:lightline = {
         \ 'colorscheme': 'wombat',
         \ 'active': {
-        \   'left': [ ['mode', 'paste'], ['readonly', 'linenumber', 'gitbranch'],
+        \   'left': [ ['mode', 'paste'], ['readonly', 'linenumber', 'gitbranch'], ['filename'],
         \   ],
-        \   'right': [ ['filename'], ['filetype'],
+        \   'right': [ ['filetype'],
         \   ]
         \ },
         \ 'component_function': {
@@ -57,4 +66,9 @@ if !exists('g:vscode')
     let g:buftabline_show=1
     let g:buftabline_numbers=2
     let g:buftabline_indicators='on'
+
+    "------------------------
+    " bclose
+    "------------------------
+    let g:bclose_no_plugin_maps=1
 endif

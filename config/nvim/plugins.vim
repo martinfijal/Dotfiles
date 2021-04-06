@@ -2,7 +2,7 @@
 call plug#begin('~/.config/nvim/plugged')
 
 
-" Auto pairs for '(' '[' '{' 
+" Auto pairs for '(' '[' '{'
 Plug 'jiangmiao/auto-pairs'
 
 
@@ -12,13 +12,23 @@ else
   " ALL OTHER NVIM
   " Colors
   Plug 'joshdick/onedark.vim'
+  Plug 'davidosomething/vim-colors-meh'
+  Plug 'gryf/wombat256grf'
+  Plug 'romgrk/doom-one.vim'
 
+  " Fuzzy finding
   Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
   Plug 'ctrlpvim/ctrlp.vim'
 
-  " Auto complete
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  " Telescope
+  Plug 'nvim-lua/popup.nvim'
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'nvim-telescope/telescope.nvim'
+
+  " Auto-complete
+  Plug 'neovim/nvim-lspconfig'
+  Plug 'hrsh7th/nvim-compe'
 
   " Statusline and bufferline
   Plug 'itchyny/lightline.vim'
@@ -34,11 +44,16 @@ else
   Plug 'sheerun/vim-polyglot'
   " File Explorer
   Plug 'scrooloose/NERDTree'
-  
+
   " Movement
   Plug 'justinmk/vim-sneak'
 
-endif
+  " Window/buffer stuffs
+  Plug 'rbgrouleff/bclose.vim'
 
+
+  Plug 'ntpeters/vim-better-whitespace'
+
+endif
 
 call plug#end()
