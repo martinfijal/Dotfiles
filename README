@@ -1,20 +1,10 @@
 Dotfiles!
 
 
-VIM
-====
+Tools
 
-Installation
-------------
+* Neovim
+* vim
+* ag
+* tmux
 
-Clone and run Vundle install:
-
-```
-:BundleInstall
-```
-
-
-Notable keyboard mappings
--------------------------
-
-<leader>p   Toggle paste mode
