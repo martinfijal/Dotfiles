@@ -71,4 +71,13 @@ if !exists('g:vscode')
     " bclose
     "------------------------
     let g:bclose_no_plugin_maps=1
+
+    "------------------------
+    " Neoformat
+    "------------------------
+    augroup fmt
+      autocmd!
+      autocmd BufWritePre *.go undojoin | Neoformat
+    augroup END
+
 endif
