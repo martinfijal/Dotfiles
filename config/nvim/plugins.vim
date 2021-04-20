@@ -29,10 +29,14 @@ else
   " Auto-complete
   Plug 'neovim/nvim-lspconfig'
   Plug 'hrsh7th/nvim-compe'
+  Plug 'glepnir/lspsaga.nvim'
+
+  Plug 'liuchengxu/vim-which-key'
 
   " Statusline and bufferline
   Plug 'itchyny/lightline.vim'
   Plug 'ap/vim-buftabline'
+  Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'lua'}
 
   " Tmux integration
   Plug 'christoomey/vim-tmux-navigator'
@@ -40,19 +44,28 @@ else
   " Git
   Plug 'tpope/vim-fugitive'
 
+  " Coding
+  Plug 'tpope/vim-commentary'
+
   " Better Syntax Support
   Plug 'sheerun/vim-polyglot'
   " File Explorer
-  Plug 'scrooloose/NERDTree'
+  "Plug 'scrooloose/NERDTree'
 
-  " Movement
+" Code
+" Movement
   Plug 'justinmk/vim-sneak'
 
   " Window/buffer stuffs
   Plug 'rbgrouleff/bclose.vim'
 
+  " Icons
+  Plug 'kyazdani42/nvim-web-devicons' " for file icons
+  Plug 'kyazdani42/nvim-tree.lua'
+  Plug 'ryanoasis/vim-devicons'
 
-  Plug 'ntpeters/vim-better-whitespace'
+
+  "Plug 'ntpeters/vim-better-whitespace'
 
 endif
 

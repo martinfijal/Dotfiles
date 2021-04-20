@@ -23,7 +23,7 @@ if !exists('g:vscode')
     tnoremap <leader><ESC> <C-\><C-n>
 
     " FZF
-    " map <leader>b :Buffers<CR>
+    map <leader>b :Buffers<CR>
     nnoremap <silent> <leader>o :Files<CR>
 
     " Ctrlp
@@ -34,6 +34,13 @@ if !exists('g:vscode')
     nnoremap <silent> <Leader>bd :Bclose<CR>
     nnoremap <silent> <Leader>q :Bclose<CR>
 
+    " which key
+    "nnoremap <silent> <Space> :WhichKey ','<CR>
+
+    " nvim-tree
+    nnoremap <C-n> :NvimTreeToggle<CR>
+    nnoremap <leader>r :NvimTreeRefresh<CR>
+    nnoremap <leader>n :NvimTreeFindFile<CR>
 
     " inoremap <silent><expr> <TAB>
     " \ pumvisible() ? "\<C-n>" :
@@ -43,4 +50,14 @@ if !exists('g:vscode')
     " let col = col('.') - 1
     " return !col || getline('.')[col - 1]  =~ '\s'
     " endfunction"}}}
+    "
+    "
+    "
+nmap sh :call SynStack()
+function! SynStack()
+    if !exists("*synstack")
+        return
+    endif
+    echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+    endfunc
 endif

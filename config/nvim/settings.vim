@@ -36,17 +36,22 @@ if !exists('g:vscode')
     set formatoptions-=cro                  " Stop newline continution of comments
     set clipboard=unnamedplus               " Copy paste between vim and everything else
     "set autochdir                           " Your working directory will always be the same as your working directory
-
     set scrolloff=5
     set sidescrolloff=8
+    set shortmess+=c
+    set smartcase    " case insensitive search for lower case
 
     set list
     "set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
     "set listchars=tab:>-,trail:~,extends:>,precedes:<
-    set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,space:.
+    set listchars=eol:¬,tab:>·,trail:~,extends:>,precedes:<,lead:.
 
     au! BufWritePost $MYVIMRC source %      " auto source when writing to init.vm alternatively you can run :source $MYVIMRC
 
     " You can't stop me
     cmap w!! w !sudo tee %
+
+set laststatus=2
+set showtabline=2
+set guioptions-=e
 endif

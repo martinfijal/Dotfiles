@@ -40,10 +40,10 @@ local on_attach = function(client, bufnr)
 
   -- Set autocommands conditional on server_capabilities
   if client.resolved_capabilities.document_highlight then
+      -- hi LspReferenceRead cterm=bold ctermbg=Green ctermfg=DarkGrey guibg=Green
+      -- hi LspReferenceText cterm=bold ctermbg=Grey ctermfg=DarkGrey guibg=Grey
+      -- hi LspReferenceWrite cterm=bold ctermbg=red guibg=Red
     vim.api.nvim_exec([[
-      hi LspReferenceRead cterm=bold ctermbg=red guibg=LightYellow
-      hi LspReferenceText cterm=bold ctermbg=red guibg=LightYellow
-      hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightYellow
       augroup lsp_document_highlight
         autocmd! * <buffer>
         autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
@@ -65,6 +65,16 @@ nvim_lsp.pyright.setup {
 
 -- Setup Go
 nvim_lsp.gopls.setup {
+    on_attach = on_attach,
+}
+
+-- Setup Typescript
+nvim_lsp.tsserver.setup {
+    on_attach = on_attach,
+}
+
+-- Setup Rust
+nvim_lsp.rust_analyzer.setup {
     on_attach = on_attach,
 }
 
@@ -142,6 +152,12 @@ vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+
+
+
+local saga = require 'lspsaga'
+--saga.init_lsp_saga()
+
 EOF
 " Completion
 "let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
