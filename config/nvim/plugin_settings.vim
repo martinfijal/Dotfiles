@@ -73,6 +73,14 @@ if !exists('g:vscode')
     let g:bclose_no_plugin_maps=1
 
     "------------------------
+    " Neoformat
+    "------------------------
+    augroup fmt
+      autocmd!
+      autocmd BufWritePre *.go undojoin | Neoformat
+    augroup END
+
+    "------------------------
     " indent-blankline
     "------------------------
     "let g:indent_blankline_char = '▎'

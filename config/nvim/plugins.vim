@@ -26,12 +26,15 @@ else
   Plug 'nvim-lua/plenary.nvim'
   Plug 'nvim-telescope/telescope.nvim'
 
-  " Auto-complete
+  " LSP and Auto-complete
   Plug 'neovim/nvim-lspconfig'
   Plug 'hrsh7th/nvim-compe'
   Plug 'glepnir/lspsaga.nvim'
 
   Plug 'liuchengxu/vim-which-key'
+
+  " Format code
+  Plug 'sbdchd/neoformat'
 
   " Statusline and bufferline
   Plug 'itchyny/lightline.vim'
