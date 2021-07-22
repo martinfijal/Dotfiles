@@ -66,6 +66,10 @@ require('packer').startup(function()
 
     -- Buffers / tabs
     use 'ojroques/nvim-hardline'
+    use 'ojroques/nvim-bufdel'
+
+    -- UI
+    use 'akinsho/nvim-toggleterm.lua'
 
     -- Navigation
     use 'phaazon/hop.nvim'
@@ -126,10 +130,24 @@ opt.clipboard = 'unnamedplus'
 opt.list = true                                     -- show invisible chars
 opt.listchars = 'eol:¬,tab:>·,trail:~,extends:>,precedes:<,lead:.'
 -- opt.wildmode = {'list', 'longest'}
+opt.wildignore = {"*/.git/*", "*/node_modules/*"}
 
 
 -- Telescope
-require('telescope').setup{}
+local telescope_actions = require('telescope.actions')
+require('telescope').setup {
+    defaults = {
+        file_sorter = require'telescope.sorters'.get_fzy_file,
+        file_ignore_patterns = {},
+        --path_display = { shorten = 5 },
+
+        mappings = {
+            i = {
+                ["<esc>"] = telescope_actions.close
+            }
+        }
+    }
+}
 
 -- LSP
 local lsp = require('lspconfig')
@@ -172,6 +190,12 @@ require('nvim-treesitter.configs').setup {
     ensure_installed = "maintained",
 }
 
+-- toggleterm
+require('toggleterm').setup {
+    hide_number = true,
+    start_in_insert = true,
+}
+
 -- Which-key
 local wk = require('which-key')
 local wk_options = {
@@ -192,7 +216,7 @@ wk.setup {
     },
 }
 wk.register({
-    w = {'<cmd>w!<CR>', 'write'},
+    w = {'write'},
     n = {'<cmd>NvimTreeFindFile<CR>', 'file tree'},
 }, wk_options)
 wk.register({
@@ -202,7 +226,7 @@ wk.register({
     },
     b = {
         name = '+buffers',
-        o = {'<cmd>:Telescope buffers<CR>', 'buffers'},
+        o = {'switch buffer'},
     },
     g = {
         name = '+git',
@@ -237,10 +261,58 @@ wk.register({
 --}, {prefix = '<leader>'})
 }, wk_options)
 
+-- nvim tree
+g.nvim_tree_side = 'left'
+g.nvim_tree_width = 30
+g.nvim_tree_quit_on_open = 0
+g.nvim_tree_disable_netrw = 0
+
 --
 -- Keymappings
 --
+
+-- TODO : refactor keymaps into lua
+vim.api.nvim_exec(
+[[
+command W write
+
+" Enter and leave when moving to and from a terminal
+autocmd BufWinEnter,WinEnter term://* startinsert
+autocmd BufLeave term://* stopinsert
+
+autocmd FileType hcl setlocal shiftwidth=2 softtabstop=2 expandtab
+
+
+
+" move between splits
+nnoremap <c-h> <c-w>h
+nnoremap <c-j> <c-w>j
+nnoremap <c-k> <c-w>k
+nnoremap <c-l> <c-w>l
+
+" move out of terminal as regular moving
+tnoremap <c-h> <c-\><c-n><c-w>h
+tnoremap <c-j> <c-\><c-n><c-w>j
+tnoremap <c-k> <c-\><c-n><c-w>k
+tnoremap <c-l> <c-\><c-n><c-w>l
+tnoremap <leader><esc> <c-\><c-n>
+
+
+]], true)
+
+
+local map_options = { noremap = true, silent = true}
 map('t', 'jj', '<ESC>', {noremap = false})
+map('n', '<leader>q', '<cmd>:BufDel<CR>', map_options)
+map('n', '<leader>bd', '<cmd>:BufDel<CR>', map_options)
+map('n', '<leader>w', '<cmd>:w!<CR>', map_options)
+map('n', '<leader>t', '<cmd>:ToggleTerm<CR>', map_options)
+map('t', '<leader>t', '<cmd>:ToggleTerm<CR>', map_options)
+
+-- telescope
+map('n', '<TAB>', '<cmd>:Telescope buffers sort_lastused=true theme=get_ivy winblend=10<CR>', map_options)
+map('n', '<leader>o', '<cmd>:Telescope find_files sort_lastused=true theme=get_ivy winblend=10<CR>', map_options)
+map('n', '<leader>fg', '<cmd>:Telescope live_grep theme=get_ivy winblend=10<CR>', map_options)
 
 
 -- Tab/shift-tab to move in complete menu
