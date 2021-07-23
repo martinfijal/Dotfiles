@@ -55,6 +55,8 @@ require('packer').startup(function()
     use 'marko-cerovac/material.nvim'
     use 'joshdick/onedark.vim'
     use 'folke/lsp-colors.nvim'
+    use 'sainnhe/sonokai'
+
 
     -- LSP and Auto-complete
     use 'neovim/nvim-lspconfig'
@@ -81,7 +83,7 @@ require('packer').startup(function()
 
     -- UI
     use 'akinsho/nvim-toggleterm.lua'
-    -- use 'lukas-reineke/indent-blankline.nvim'
+    use 'lukas-reineke/indent-blankline.nvim'
 
     -- Navigation
     use 'phaazon/hop.nvim'
@@ -93,10 +95,15 @@ require('packer').startup(function()
 end)
 
 
--- Settings
 --
-vim.g.neon_style = 'doom'
-cmd [[colorscheme neon]]
+-- Colorscheme
+--
+
+-- vim.g.neon_style = 'doom'
+-- cmd [[colorscheme neon]]
+vim.g.sonokai_style = 'maia'
+vim.g.sonokai_italic = 0
+cmd [[colorscheme sonokai]]
 
 
 -- Hightlight yanked text in Neovim >= 0.5
@@ -141,8 +148,13 @@ opt.timeoutlen = 500                                -- command sequence timeout
 opt.clipboard = 'unnamedplus'
 opt.list = true                                     -- show invisible chars
 opt.listchars = 'eol:¬,tab:>·,trail:~,extends:>,precedes:<,lead:.'
+-- opt.listchars = 'eol:¬'
 -- opt.wildmode = {'list', 'longest'}
 opt.wildignore = {"*/.git/*", "*/node_modules/*"}
+
+-- Workaroud for ghost indents with cursorline
+-- https://github.com/lukas-reineke/indent-blankline.nvim/issues/59
+vim.wo.colorcolumn = "99999"
 
 
 -- Telescope
@@ -162,8 +174,16 @@ require('telescope').setup {
 }
 require('telescope').load_extension('fzf')
 
--- Commant
+-- Comments
 require('nvim_comment').setup()
+
+-- Indent guides
+-- vim.g.indentLine_enabled = true
+vim.g.indent_blankline_char = "▏"
+vim.g.indent_blankline_filetype_exclude = {"fugitive", "help", "terminal"}
+vim.g.indent_blankline_buftype_exclude = {"terminal"}
+vim.g.indent_blankline_show_trailing_blankline_indent = false
+vim.g.indent_blankline_show_first_indent_level = false
 
 -- LSP
 local lsp = require('lspconfig')
@@ -316,7 +336,7 @@ local wk_options = {
       silent = true, -- use `silent` when creating keymaps
       noremap = true, -- use `noremap` when creating keymaps
       nowait = true, -- use `nowait` when creating keymaps
-    }
+}
 wk.setup {
     show_help = false,
     triggers = 'auto',
