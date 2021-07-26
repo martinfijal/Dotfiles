@@ -66,20 +66,25 @@ require('packer').startup(function()
     -- LSP and Auto-complete
     use 'neovim/nvim-lspconfig'
     use 'hrsh7th/nvim-compe'
-    --  Plug 'glepnir/lspsaga.nvim'
+    use 'glepnir/lspsaga.nvim'
     --  Plug 'folke/lsp-trouble.nvim'
 
     -- Highlighting / syntax
     use { 'nvim-treesitter/nvim-treesitter', branch = '0.5-compat', run = ':TSUpdate' }
 
-    -- Git / Code / snippets
-    use 'tpope/vim-fugitive'
+    -- Git
     use 'TimUntersberger/neogit'
+    use 'sindrets/diffview.nvim'
     use 'kdheepak/lazygit.nvim'
     use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }}
+
+    -- Code
     -- use 'windwp/nvim-autopairs'
     use 'jiangmiao/auto-pairs'
     use 'terrortylor/nvim-comment'
+    use 'sbdchd/neoformat'  -- TODO find a stable way to do with LSP
+
+    -- Snippets
     use 'hrsh7th/vim-vsnip'
     use 'rafamadriz/friendly-snippets'
 
@@ -114,7 +119,7 @@ end)
 cmd [[set background=dark]]
 vim.g.everforest_background = 'hard'
 vim.g.everforest_disable_italic_comment = true
-cmd [[colorscheme wombat256grf]]
+cmd [[colorscheme doom-one]]
 
 
 -- Hightlight yanked text in Neovim >= 0.5
@@ -203,13 +208,23 @@ vim.g.indent_blankline_show_first_indent_level = false
 local lsp = require('lspconfig')
 local lsp_on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    local function lspmap(bufnr, mode, lhs, rhs)
+        local opts = { noremap = true, silent = true }
+        vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
+    end
+
+    lspmap(bufnr, 'n', 'K', [[<cmd>Lspsaga hover_doc<cr>]])
+    lspmap(bufnr, 'n', 'C-k', [[<cmd>Lspsaga signature_help<cr>]])
+    lspmap(bufnr, 'n', 'gd', [[<cmd>Lspsaga preview_definition<cr>]])
+    lspmap(bufnr, 'n', 'gD', [[<cmd>lua vim.lsp.buf.definition()]])
+    lspmap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
 
     local opts = { noremap = true, silent = true }
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
@@ -221,7 +236,8 @@ local lsp_on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
     vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
 end
@@ -335,6 +351,32 @@ require('gitsigns').setup {
     numhl = true,
     current_line_blame = false,  -- show git blame
 }
+
+-- neogit
+require('neogit').setup {
+    integrations = {
+        diffview = true
+    }
+}
+
+-- diffview
+require('diffview').setup {
+    diff_binaries = false,
+    file_panel = {
+        use_icons = false
+    }
+}
+
+
+-- Neoformat
+
+vim.api.nvim_exec(
+[[
+    augroup fmt
+        autocmd!
+        autocmd BufWritePre *.go undojoin | Neoformat
+    augroup END
+]], false)
 
 -- toggleterm
 -- require('toggleterm').setup {
