@@ -49,6 +49,7 @@ require('packer').startup(function()
         requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
     }
     use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+    use 'lazytanuki/nvim-mapper'
 
     -- Colorschemes
     -- use 'rafamadriz/neon'
@@ -59,6 +60,10 @@ require('packer').startup(function()
     use 'tomasiser/vim-code-dark'
     use 'NTBBloodbath/doom-one.nvim'
     use 'jacoborus/tender.vim'
+
+    use 'YorickPeterse/vim-paper'
+    use 'yorickpeterse/happy_hacking.vim'
+
 
     -- Colors
     use 'folke/lsp-colors.nvim'
@@ -116,10 +121,11 @@ end)
 -- vim.g.sonokai_disable_italic_comment  = true
 -- cmd [[colorscheme sonokai]]
 --
-cmd [[set background=dark]]
+-- cmd [[set background=dark]]
 vim.g.everforest_background = 'hard'
 vim.g.everforest_disable_italic_comment = true
 cmd [[colorscheme doom-one]]
+-- cmd [[ colorscheme happy_hacking ]]
 
 
 -- Hightlight yanked text in Neovim >= 0.5
@@ -192,6 +198,17 @@ require('telescope').setup {
     }
 }
 require('telescope').load_extension('fzf')
+require('telescope').load_extension('mapper')
+local M = require('nvim-mapper')
+M.setup({
+    -- no_map = false,                                        -- do not assign the default keymap (<leader>MM)
+    search_path = os.getenv("HOME") .. "/.config/nvim" -- default config search path is ~/.config/nvim/lua
+})
+
+M.map('n', '<leader>gd', ':DiffviewOpen<cr>', { noremap=true, silent=true }, 'Git', 'Open Diffview', 'desc?')
+
+M.map_virtual('n', 'K', '', {}, 'LSP', 'lsp_hover', 'Show hover docs')
+M.map_virtual('n', 'C-k', '', {}, 'LSP', 'lsp_signature' , 'Show signature')
 
 -- Comments
 require('nvim_comment').setup()
