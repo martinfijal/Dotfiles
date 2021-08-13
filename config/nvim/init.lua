@@ -37,6 +37,84 @@ for _, v in ipairs(builtin_plugins) do vim.g["loaded_" .. v] = 1 end
 
 
 --
+-- Colorscheme
+--
+
+--vim.g.nord_contrast = false
+--require('nord').set()
+
+-- vim.g.yui_comments= 'emphasize'
+-- cmd [[colorscheme yui]]
+cmd [[ colorscheme vem-dark]]
+
+-- Hightlight yanked text in Neovim >= 0.5
+cmd 'au TextYankPost * lua vim.highlight.on_yank {on_visual = true}'
+
+--
+-- Plugin settings
+--
+
+-- Remap leader
+vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
+g.mapleader = ' '
+g.maplocalleader = ' '
+
+cmd 'syntax enable'
+cmd 'filetype plugin indent on'
+cmd 'set shortmess+=c'
+
+opt.cmdheight = 1
+opt.number = true
+opt.relativenumber = true
+opt.wrap = false
+opt.cursorline = true                               -- highlight current line
+opt.hidden = true                                   -- background buffers
+opt.ignorecase = true
+opt.smartcase = true
+opt.smartindent = false
+opt.splitbelow = true
+opt.splitright = true
+opt.expandtab = true                                -- tabs to spaces
+opt.hlsearch = true
+opt.showmode = false
+opt.showcmd = true
+opt.lazyredraw = true
+opt.backup = false
+opt.writebackup = false
+opt.mouse = 'a'                                     -- enable mouse support
+opt.signcolumn = 'yes'
+opt.formatoptions = 'crqnj'                         -- automatic formatting options
+-- opt.shortmess = 'atToOFc'                           -- prompt message options
+opt.laststatus = 2
+opt.scrolloff = 5
+opt.sidescrolloff = 8
+opt.shiftwidth = 4
+opt.tabstop = 4
+opt.softtabstop = 4
+opt.pumheight = 10
+opt.shiftround = true                               -- round indents
+opt.termguicolors = true                            -- true color support
+opt.updatetime = 300
+opt.timeoutlen = 100                                -- command sequence timeout
+opt.ttimeoutlen = 0
+opt.clipboard = 'unnamedplus'
+opt.list = true                                     -- show invisible chars
+-- opt.listchars = 'eol:¬,tab:>·,trail:~,extends:>,precedes:<,lead:.'
+opt.listchars = 'tab:>·,extends:>,precedes:<'
+-- opt.wildmode = {'list', 'longest'}
+opt.wildmenu = true
+opt.wildmode = 'longest:full,full'
+opt.wildignore = {"*/.git/*", "*/node_modules/*", "*__pycache__*"}
+opt.completeopt = {'menuone', 'noinsert', 'noselect'}
+opt.encoding = 'utf-8'
+opt.fileencoding = 'utf-8'
+
+-- Workaround for ghost indents with cursorline
+-- https://github.com/lukas-reineke/indent-blankline.nvim/issues/59
+vim.wo.colorcolumn = "99999"
+
+
+--
 -- Plugins
 --
 local use = require('packer').use
@@ -44,26 +122,22 @@ require('packer').startup(function()
     use 'wbthomason/packer.nvim'
 
     -- Telescope
-    use {
-        'nvim-telescope/telescope.nvim',
-        requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
-    }
-    use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+    -- use {
+    --     'nvim-telescope/telescope.nvim',
+    --     requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
+    -- }
+    -- use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+    use { 'liuchengxu/vim-clap', run = ':Clap install-binary!' }
     use 'lazytanuki/nvim-mapper'
 
     -- Colorschemes
-    -- use 'rafamadriz/neon'
-    -- use 'marko-cerovac/material.nvim'
-    -- use 'joshdick/onedark.vim'
-    use 'sainnhe/sonokai'
-    use 'sainnhe/everforest'
-    use 'tomasiser/vim-code-dark'
-    use 'NTBBloodbath/doom-one.nvim'
-    use 'jacoborus/tender.vim'
+--     use 'cideM/yui'
+    use 'shaunsingh/nord.nvim'
+    use 'Mofiqul/vscode.nvim'
+    use 'igungor/schellar'
+    use {'martinfijal/vem-dark', branch='personal-changes'}
 
-    use 'YorickPeterse/vim-paper'
-    use 'yorickpeterse/happy_hacking.vim'
-
+    use 'lifepillar/vim-colortemplate'
 
     -- Colors
     use 'folke/lsp-colors.nvim'
@@ -72,10 +146,11 @@ require('packer').startup(function()
     use 'neovim/nvim-lspconfig'
     use 'hrsh7th/nvim-compe'
     use 'glepnir/lspsaga.nvim'
+    -- use 'simrat39/symbols-outline.nvim'
     --  Plug 'folke/lsp-trouble.nvim'
 
     -- Highlighting / syntax
-    use { 'nvim-treesitter/nvim-treesitter', branch = '0.5-compat', run = ':TSUpdate' }
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
     -- Git
     use 'TimUntersberger/neogit'
@@ -99,10 +174,11 @@ require('packer').startup(function()
 
     -- UI
     -- puse 'akinsho/nvim-toggleterm.lua'
-    use 'lukas-reineke/indent-blankline.nvim'
+    use { 'lukas-reineke/indent-blankline.nvim', disabled=true }
 
     -- Navigation
     use 'phaazon/hop.nvim'
+    use 'ggandor/lightspeed.nvim'
 
     -- Helper
     use 'folke/which-key.nvim'
@@ -111,94 +187,23 @@ require('packer').startup(function()
 end)
 
 
---
--- Colorscheme
---
-
--- vim.g.neon_style = 'doom'
--- cmd [[colorscheme neon]]
--- vim.g.sonokai_style = 'maia'
--- vim.g.sonokai_disable_italic_comment  = true
--- cmd [[colorscheme sonokai]]
---
--- cmd [[set background=dark]]
-vim.g.everforest_background = 'hard'
-vim.g.everforest_disable_italic_comment = true
-cmd [[colorscheme doom-one]]
--- cmd [[ colorscheme happy_hacking ]]
-
-
--- Hightlight yanked text in Neovim >= 0.5
-cmd 'au TextYankPost * lua vim.highlight.on_yank {on_visual = true}'
-
---
--- Plugin settings
---
-
--- Remap leader
-vim.api.nvim_set_keymap('', '<Space>', '<Nop>', { noremap = true, silent = true })
-g.mapleader = ' '
-g.maplocalleader = ' '
-
-opt.number = true
-opt.relativenumber = true
-opt.wrap = false
-opt.cursorline = true                               -- highlight current line
-opt.hidden = true                                   -- background buffers
-opt.ignorecase = true
-opt.smartcase = true
-opt.smartindent = true
-opt.splitbelow = true
-opt.splitright = true
-opt.expandtab = true                                -- tabs to spaces
-opt.hlsearch = true
-opt.showmode = false
-opt.showcmd = true
-opt.mouse = 'a'                                     -- enable mouse support
-opt.signcolumn = 'yes'
-opt.formatoptions = 'crqnj'                         -- automatic formatting options
-opt.shortmess = 'atToOFc'                           -- prompt message options
-opt.laststatus = 2
-opt.scrolloff = 5
-opt.sidescrolloff = 8
-opt.shiftwidth = 4
-opt.tabstop = 4
-opt.softtabstop = 4
-opt.pumheight = 10
-opt.shiftround = true                               -- round indents
-opt.termguicolors = true                            -- true color support
-opt.updatetime = 100
-opt.timeoutlen = 200                                -- command sequence timeout
-opt.clipboard = 'unnamedplus'
-opt.list = true                                     -- show invisible chars
-opt.listchars = 'eol:¬,tab:>·,trail:~,extends:>,precedes:<,lead:.'
--- opt.listchars = 'eol:¬'
--- opt.wildmode = {'list', 'longest'}
-opt.wildignore = {"*/.git/*", "*/node_modules/*"}
-opt.completeopt = {'menuone', 'noinsert', 'noselect'}
-
--- Workaround for ghost indents with cursorline
--- https://github.com/lukas-reineke/indent-blankline.nvim/issues/59
-vim.wo.colorcolumn = "99999"
-
-
 -- Telescope
-local telescope_actions = require('telescope.actions')
-require('telescope').setup {
-    defaults = {
-        -- file_sorter = require'telescope.sorters'.get_fzy_file,
-        file_ignore_patterns = {},
-        --path_display = { shorten = 5 },
-
-        mappings = {
-            i = {
-                ["<esc>"] = telescope_actions.close
-            }
-        }
-    }
-}
-require('telescope').load_extension('fzf')
-require('telescope').load_extension('mapper')
+-- local telescope_actions = require('telescope.actions')
+-- require('telescope').setup {
+--     defaults = {
+--         -- file_sorter = require'telescope.sorters'.get_fzy_file,
+--         file_ignore_patterns = {'node_modules/.*', '.git/.*'},
+--         --path_display = { shorten = 5 },
+-- 
+--         mappings = {
+--             i = {
+--                 ["<esc>"] = telescope_actions.close
+--             }
+--         }
+--     }
+-- }
+-- require('telescope').load_extension('fzf')
+-- require('telescope').load_extension('mapper')
 local M = require('nvim-mapper')
 M.setup({
     -- no_map = false,                                        -- do not assign the default keymap (<leader>MM)
@@ -210,16 +215,40 @@ M.map('n', '<leader>gd', ':DiffviewOpen<cr>', { noremap=true, silent=true }, 'Gi
 M.map_virtual('n', 'K', '', {}, 'LSP', 'lsp_hover', 'Show hover docs')
 M.map_virtual('n', 'C-k', '', {}, 'LSP', 'lsp_signature' , 'Show signature')
 
+
+-- Clamp
+cmd [[
+augroup clap
+    autocmd!
+    autocmd FileType clap_input call compe#setup({ 'enabled': v:false }, 0)
+augroup END
+]]
+vim.g.clap_provider_quick_open = {
+    source = {'~/config/init.vim', '~/.zshrc', '~/.tmux.conf'},
+    sink = 'e'
+}
+vim.g.clap_disable_run_rooter = true
+vim.g.clap_insert_mode_only = true
+vim.g.clap_open_preview = 'always'
+vim.g.clap_preview_direction = 'UD'
+vim.g.clap_preview_size = 5
+map('n', '<TAB>', '<cmd>:Clap buffers<CR>', map_options)
+map('n', '<leader>o', '<cmd>:Clap files<CR>', map_options)
+map('n', '<leader>g', '<cmd>:Clap grep2<CR>', map_options)
+
 -- Comments
 require('nvim_comment').setup()
 
 -- Indent guides
--- vim.g.indentLine_enabled = true
+vim.g.indent_blankline_enabled = true
 vim.g.indent_blankline_char = "▏"
 vim.g.indent_blankline_filetype_exclude = {"fugitive", "help", "terminal"}
 vim.g.indent_blankline_buftype_exclude = {"terminal"}
 vim.g.indent_blankline_show_trailing_blankline_indent = false
 vim.g.indent_blankline_show_first_indent_level = false
+
+vim.g.indent_blankline_use_treesitter = true
+-- vim.g.indent_blankline_space_char = '.'
 
 -- LSP
 local lsp = require('lspconfig')
@@ -234,7 +263,7 @@ local lsp_on_attach = function(client, bufnr)
     lspmap(bufnr, 'n', 'C-k', [[<cmd>Lspsaga signature_help<cr>]])
     lspmap(bufnr, 'n', 'gd', [[<cmd>Lspsaga preview_definition<cr>]])
     lspmap(bufnr, 'n', 'gD', [[<cmd>lua vim.lsp.buf.definition()]])
-    lspmap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
+    -- lspmap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
 
     local opts = { noremap = true, silent = true }
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
@@ -255,7 +284,7 @@ local lsp_on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
 
     -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]], opts)
     vim.cmd [[ command! Format execute 'lua vim.lsp.buf.formatting()' ]]
 end
 
@@ -267,6 +296,10 @@ lsp.pyright.setup {
     capabilities = lsp_capabilities,
 }
 lsp.gopls.setup {
+    on_attach = lsp_on_attach,
+    capabilities = lsp_capabilities,
+}
+lsp.rls.setup {
     on_attach = lsp_on_attach,
     capabilities = lsp_capabilities,
 }
@@ -337,6 +370,7 @@ require('compe').setup{
 -- }
 require('hardline').setup {
     bufferline = true,
+    theme = 'one',
     sections = {
         {class = 'mode', item = require('hardline.parts.mode').get_item},
         {class = 'high', item = require('hardline.parts.git').get_item, hide = 80},
@@ -371,6 +405,7 @@ require('gitsigns').setup {
 
 -- neogit
 require('neogit').setup {
+    disable_context_highlighting = false,
     integrations = {
         diffview = true
     }
@@ -427,69 +462,69 @@ vim.api.nvim_exec(
 
 
 -- Which-key
-local wk = require('which-key')
-local wk_options = {
-      mode = "n", -- NORMAL mode
-      prefix = "<leader>",
-      buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-      silent = true, -- use `silent` when creating keymaps
-      noremap = true, -- use `noremap` when creating keymaps
-      nowait = true, -- use `nowait` when creating keymaps
-}
-wk.setup {
-    show_help = false,
-    triggers = 'auto',
-    key_labels = {
-        ['<space>'] = 'SPC',
-        ['<CR>'] = 'RET',
-        ['<tab>'] = 'TAB',
-    },
-}
-wk.register({
-    w = {'write'},
-    n = {'<cmd>NvimTreeFindFile<CR>', 'file tree'},
-}, wk_options)
-wk.register({
-    f = {
-        name = '+file',
-        f = {"New file"},
-    },
-    b = {
-        name = '+buffers',
-        o = {'switch buffer'},
-    },
-    g = {
-        name = '+git',
-        g = {'<cmd>:LazyGit<CR>', 'lazygit'}
-    },
-    l = {
-        name = '+lsp',
-    },
-    s = {
-        name = '+search',
-    },
-    v = {
-        name = "+windows",
-        ["w"] = { "<C-W>p", "other-window" },
-        ["d"] = { "<C-W>c", "delete-window" },
-        ["-"] = { "<C-W>s", "split-window-below" },
-        ["|"] = { "<C-W>v", "split-window-right" },
-        ["2"] = { "<C-W>v", "layout-double-columns" },
-        ["h"] = { "<C-W>h", "window-left" },
-        ["j"] = { "<C-W>j", "window-below" },
-        ["l"] = { "<C-W>l", "window-right" },
-        ["k"] = { "<C-W>k", "window-up" },
-        ["H"] = { "<C-W>5<", "expand-window-left" },
-        ["J"] = { ":resize +5", "expand-window-below" },
-        ["L"] = { "<C-W>5>", "expand-window-right" },
-        ["K"] = { ":resize -5", "expand-window-up" },
-        ["="] = { "<C-W>=", "balance-window" },
-        ["s"] = { "<C-W>s", "split-window-below" },
-        ["v"] = { "<C-W>v", "split-window-right" }
-    },
-
---}, {prefix = '<leader>'})
-}, wk_options)
+-- local wk = require('which-key')
+-- local wk_options = {
+--       mode = "n", -- NORMAL mode
+--       prefix = "<leader>",
+--       buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
+--       silent = true, -- use `silent` when creating keymaps
+--       noremap = true, -- use `noremap` when creating keymaps
+--       nowait = true, -- use `nowait` when creating keymaps
+-- }
+-- wk.setup {
+--     show_help = false,
+--     triggers = 'auto',
+--     key_labels = {
+--         ['<space>'] = 'SPC',
+--         ['<CR>'] = 'RET',
+--         ['<tab>'] = 'TAB',
+--     },
+-- }
+-- wk.register({
+--     w = {'write'},
+--     n = {'<cmd>NvimTreeFindFile<CR>', 'file tree'},
+-- }, wk_options)
+-- wk.register({
+--     f = {
+--         name = '+file',
+--         f = {"New file"},
+--     },
+--     b = {
+--         name = '+buffers',
+--         o = {'switch buffer'},
+--     },
+--     g = {
+--         name = '+git',
+--         g = {'<cmd>:LazyGit<CR>', 'lazygit'}
+--     },
+--     l = {
+--         name = '+lsp',
+--     },
+--     s = {
+--         name = '+search',
+--     },
+--     v = {
+--         name = "+windows",
+--         ["w"] = { "<C-W>p", "other-window" },
+--         ["d"] = { "<C-W>c", "delete-window" },
+--         ["-"] = { "<C-W>s", "split-window-below" },
+--         ["|"] = { "<C-W>v", "split-window-right" },
+--         ["2"] = { "<C-W>v", "layout-double-columns" },
+--         ["h"] = { "<C-W>h", "window-left" },
+--         ["j"] = { "<C-W>j", "window-below" },
+--         ["l"] = { "<C-W>l", "window-right" },
+--         ["k"] = { "<C-W>k", "window-up" },
+--         ["H"] = { "<C-W>5<", "expand-window-left" },
+--         ["J"] = { ":resize +5", "expand-window-below" },
+--         ["L"] = { "<C-W>5>", "expand-window-right" },
+--         ["K"] = { ":resize -5", "expand-window-up" },
+--         ["="] = { "<C-W>=", "balance-window" },
+--         ["s"] = { "<C-W>s", "split-window-below" },
+--         ["v"] = { "<C-W>v", "split-window-right" }
+--     },
+-- 
+-- --}, {prefix = '<leader>'})
+-- }, wk_options)
 
 -- nvim tree
 g.nvim_tree_side = 'left'
@@ -519,6 +554,9 @@ tnoremap <c-l> <c-\><c-n><c-w>l
 tnoremap <leader><esc> <c-\><c-n>
 ]], true)
 
+require('lightspeed').setup {
+
+}
 
 local map_options = { noremap = true, silent = true}
 map('i', 'jj', '<ESC>', map_options)
@@ -532,15 +570,15 @@ map('n', '<leader>t', '<cmd>:terminal<CR>', map_options)
 map('n', '<leader>q', '<cmd>:bd<CR>', map_options)
 map('n', '<leader>Q', '<cmd>:qa!<CR>', map_options)
 
-map('n', 's', '<cmd>:HopChar2<CR>', {silent = true})
-map('n', 'S', '<cmd>:HopWord<CR>', {silent = true})
+-- map('n', 's', '<cmd>:HopChar2<CR>', {silent = true})
+-- map('n', 'S', '<cmd>:HopWord<CR>', {silent = true})
 -- map('t', '<leader>t', '<cmd>:ToggleTerm<CR>', map_options)
 map('t', '<ESC>', '&filetype == "fzf" ? "\\<ESC>" : "\\<C-\\>\\<C-n>"' , {expr = true})
 
 -- telescope
-map('n', '<TAB>', '<cmd>:Telescope buffers sort_lastused=true theme=get_ivy winblend=10<CR>', map_options)
-map('n', '<leader>o', '<cmd>:Telescope find_files sort_lastused=true theme=get_ivy winblend=10<CR>', map_options)
-map('n', '<leader>fg', '<cmd>:Telescope live_grep theme=get_ivy<CR>', map_options)
+-- map('n', '<TAB>', '<cmd>:Telescope buffers sort_lastused=true theme=get_ivy winblend=10<CR>', map_options)
+-- map('n', '<leader>o', '<cmd>:Telescope find_files sort_lastused=true theme=get_ivy winblend=10<CR>', map_options)
+-- map('n', '<leader>fg', '<cmd>:Telescope live_grep theme=get_ivy<CR>', map_options)
 
 
 --
