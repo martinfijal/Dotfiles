@@ -45,6 +45,7 @@ for _, v in ipairs(builtin_plugins) do vim.g["loaded_" .. v] = 1 end
 
 -- vim.g.yui_comments= 'emphasize'
 -- cmd [[colorscheme yui]]
+vim.g.vem_colors_italic = false
 cmd [[ colorscheme vem-dark]]
 
 -- Hightlight yanked text in Neovim >= 0.5
@@ -139,15 +140,16 @@ require('packer').startup(function()
 
     use 'lifepillar/vim-colortemplate'
 
-    -- Colors
+    -- Colors / icons
     use 'folke/lsp-colors.nvim'
+    use 'kyazdani42/nvim-web-devicons'
 
     -- LSP and Auto-complete
     use 'neovim/nvim-lspconfig'
     use 'hrsh7th/nvim-compe'
     use 'glepnir/lspsaga.nvim'
     -- use 'simrat39/symbols-outline.nvim'
-    --  Plug 'folke/lsp-trouble.nvim'
+    --  use 'folke/lsp-trouble.nvim'
 
     -- Highlighting / syntax
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
@@ -171,6 +173,7 @@ require('packer').startup(function()
     -- Buffers / tabs
     use 'ojroques/nvim-hardline'
     use 'ojroques/nvim-bufdel'
+    use 'pacha/vem-tabline'
 
     -- UI
     -- puse 'akinsho/nvim-toggleterm.lua'
@@ -357,6 +360,10 @@ require('compe').setup{
     }
 }
 
+-- vem tabline
+vim.g.vem_tabline_show = 2
+vim.g.vem_tabline_show_number = 'index'
+
 -- Hardline
 -- require('bufferline').setup {
 --     options = {
@@ -369,7 +376,7 @@ require('compe').setup{
 --     }
 -- }
 require('hardline').setup {
-    bufferline = true,
+    bufferline = false,
     theme = 'one',
     sections = {
         {class = 'mode', item = require('hardline.parts.mode').get_item},
