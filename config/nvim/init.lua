@@ -418,9 +418,7 @@ require('neogit').setup {
 -- diffview
 require('diffview').setup {
     diff_binaries = false,
-    file_panel = {
-        use_icons = false
-    }
+    use_icons = false
 }
 
 
