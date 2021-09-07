@@ -123,13 +123,13 @@ require('packer').startup(function()
     use 'wbthomason/packer.nvim'
 
     -- Telescope
-    -- use {
-    --     'nvim-telescope/telescope.nvim',
-    --     requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
-    -- }
-    -- use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-    use { 'liuchengxu/vim-clap', run = ':Clap install-binary!' }
+    use {
+        'nvim-telescope/telescope.nvim',
+        requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
+    }
+    use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
     use 'lazytanuki/nvim-mapper'
+    use 'ctrlpvim/ctrlp.vim'
 
     -- Colorschemes
 --     use 'cideM/yui'
@@ -137,6 +137,8 @@ require('packer').startup(function()
     use 'Mofiqul/vscode.nvim'
     use 'igungor/schellar'
     use {'martinfijal/vem-dark', branch='personal-changes'}
+    use 'mcchrish/zenbones.nvim'
+    use 'rose-pine/neovim'
 
     use 'lifepillar/vim-colortemplate'
 
@@ -191,22 +193,31 @@ end)
 
 
 -- Telescope
--- local telescope_actions = require('telescope.actions')
--- require('telescope').setup {
---     defaults = {
---         -- file_sorter = require'telescope.sorters'.get_fzy_file,
---         file_ignore_patterns = {'node_modules/.*', '.git/.*'},
---         --path_display = { shorten = 5 },
--- 
---         mappings = {
---             i = {
---                 ["<esc>"] = telescope_actions.close
---             }
---         }
---     }
--- }
--- require('telescope').load_extension('fzf')
--- require('telescope').load_extension('mapper')
+local telescope_actions = require('telescope.actions')
+require('telescope').setup {
+    defaults = {
+        -- file_sorter = require'telescope.sorters'.get_fzy_file,
+        file_ignore_patterns = {'node_modules/.*', '.git/.*'},
+        --path_display = { shorten = 5 },
+
+        mappings = {
+            i = {
+                ["<esc>"] = telescope_actions.close
+            }
+        }
+    },
+    extensions = {
+        fzf = {
+            fuzzy = true,                    -- false will only do exact matching
+            override_generic_sorter = false, -- override the generic sorter
+            override_file_sorter = true,     -- override the file sorter
+            case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                                       -- the default case_mode is "smart_case"
+        }
+    }
+}
+require('telescope').load_extension('fzf')
+require('telescope').load_extension('mapper')
 local M = require('nvim-mapper')
 M.setup({
     -- no_map = false,                                        -- do not assign the default keymap (<leader>MM)
@@ -218,26 +229,6 @@ M.map('n', '<leader>gd', ':DiffviewOpen<cr>', { noremap=true, silent=true }, 'Gi
 M.map_virtual('n', 'K', '', {}, 'LSP', 'lsp_hover', 'Show hover docs')
 M.map_virtual('n', 'C-k', '', {}, 'LSP', 'lsp_signature' , 'Show signature')
 
-
--- Clamp
-cmd [[
-augroup clap
-    autocmd!
-    autocmd FileType clap_input call compe#setup({ 'enabled': v:false }, 0)
-augroup END
-]]
-vim.g.clap_provider_quick_open = {
-    source = {'~/config/init.vim', '~/.zshrc', '~/.tmux.conf'},
-    sink = 'e'
-}
-vim.g.clap_disable_run_rooter = true
-vim.g.clap_insert_mode_only = true
-vim.g.clap_open_preview = 'always'
-vim.g.clap_preview_direction = 'UD'
-vim.g.clap_preview_size = 5
-map('n', '<TAB>', '<cmd>:Clap buffers<CR>', map_options)
-map('n', '<leader>o', '<cmd>:Clap files<CR>', map_options)
-map('n', '<leader>g', '<cmd>:Clap grep2<CR>', map_options)
 
 -- Comments
 require('nvim_comment').setup()
@@ -269,7 +260,7 @@ local lsp_on_attach = function(client, bufnr)
     -- lspmap(bufnr, 'n', '<leader>so', [[<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>]])
 
     local opts = { noremap = true, silent = true }
-    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+    -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
     -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
     -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
@@ -391,6 +382,12 @@ require('hardline').setup {
         {class = 'high', item = require('hardline.parts.filetype').get_item, hide = 80},
         {class = 'mode', item = require('hardline.parts.line').get_item},
     },
+}
+
+-- bufdel
+require('bufdel').setup {
+    next = 'alternate',
+    quit = false,
 }
 
 -- Treesitter
@@ -569,7 +566,6 @@ local map_options = { noremap = true, silent = true}
 map('i', 'jj', '<ESC>', map_options)
 map('i', 'jk', '<ESC>', map_options)
 map('t', 'jj', '<ESC>', map_options)
-map('n', '<leader>q', '<cmd>:BufDel<CR>', map_options)
 map('n', '<leader>x', '<cmd>:BufDel<CR>', map_options)
 map('n', '<leader>bd', '<cmd>:bd<CR>', map_options)
 map('n', '<leader>w', '<cmd>:w!<CR>', map_options)
@@ -584,8 +580,9 @@ map('t', '<ESC>', '&filetype == "fzf" ? "\\<ESC>" : "\\<C-\\>\\<C-n>"' , {expr =
 
 -- telescope
 -- map('n', '<TAB>', '<cmd>:Telescope buffers sort_lastused=true theme=get_ivy winblend=10<CR>', map_options)
--- map('n', '<leader>o', '<cmd>:Telescope find_files sort_lastused=true theme=get_ivy winblend=10<CR>', map_options)
--- map('n', '<leader>fg', '<cmd>:Telescope live_grep theme=get_ivy<CR>', map_options)
+map('n', '<TAB>', '<cmd>:CtrlPBuffer<CR>', map_options)
+map('n', '<leader>o', '<cmd>:Telescope find_files hidden=true sort_lastused=true theme=get_ivy winblend=10<CR>', map_options)
+map('n', '<leader>g', '<cmd>:Telescope live_grep theme=get_ivy<CR>', map_options)
 
 
 --
@@ -610,6 +607,8 @@ autocmd BufWinEnter,WinEnter term://* startinsert
 autocmd BufLeave term://* stopinsert
 
 autocmd FileType hcl setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd FileType terraform setlocal shiftwidth=2 softtabstop=2 expandtab
+autocmd bufread *.nomad set ft=hcl
 ]], false)
 
 -- Tab/shift-tab to move in complete menu
