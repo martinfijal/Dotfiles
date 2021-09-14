@@ -45,8 +45,11 @@ for _, v in ipairs(builtin_plugins) do vim.g["loaded_" .. v] = 1 end
 
 -- vim.g.yui_comments= 'emphasize'
 -- cmd [[colorscheme yui]]
+--
 vim.g.vem_colors_italic = false
-cmd [[ colorscheme vem-dark]]
+-- cmd [[ colorscheme vem-dark]]
+--
+require('nightfox').load('nightfox')
 
 -- Hightlight yanked text in Neovim >= 0.5
 cmd 'au TextYankPost * lua vim.highlight.on_yank {on_visual = true}'
@@ -139,6 +142,7 @@ require('packer').startup(function()
     use {'martinfijal/vem-dark', branch='personal-changes'}
     use 'mcchrish/zenbones.nvim'
     use 'rose-pine/neovim'
+    use 'EdenEast/nightfox.nvim'
 
     use 'lifepillar/vim-colortemplate'
 
@@ -180,6 +184,7 @@ require('packer').startup(function()
     -- UI
     -- puse 'akinsho/nvim-toggleterm.lua'
     use { 'lukas-reineke/indent-blankline.nvim', disabled=true }
+    use 'beauwilliams/focus.nvim'
 
     -- Navigation
     use 'phaazon/hop.nvim'
@@ -368,7 +373,7 @@ vim.g.vem_tabline_show_number = 'index'
 -- }
 require('hardline').setup {
     bufferline = false,
-    theme = 'one',
+    theme = 'nordic',
     sections = {
         {class = 'mode', item = require('hardline.parts.mode').get_item},
         {class = 'high', item = require('hardline.parts.git').get_item, hide = 80},
@@ -558,6 +563,10 @@ tnoremap <leader><esc> <c-\><c-n>
 
 require('lightspeed').setup {
 
+}
+
+require('focus').setup {
+    signcolumn = false
 }
 
 local map_options = { noremap = true, silent = true}
