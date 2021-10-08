@@ -40,16 +40,22 @@ for _, v in ipairs(builtin_plugins) do vim.g["loaded_" .. v] = 1 end
 -- Colorscheme
 --
 
---vim.g.nord_contrast = false
---require('nord').set()
-
--- vim.g.yui_comments= 'emphasize'
--- cmd [[colorscheme yui]]
---
 vim.g.vem_colors_italic = false
--- cmd [[ colorscheme vem-dark]]
+cmd [[ colorscheme vem-dark]]
+
+-- vim.g.material_style = "darker"
+-- cmd [[ colorscheme material]]
+
+vim.g.vscode_style = "dark"
+-- vim.cmd [[ colorscheme vscode ]]
 --
-require('nightfox').load('nightfox')
+-- require("github-theme").setup({
+--   -- functionStyle = "italic",
+--   theme_style = "dark",
+--   -- theme_style = "light_default",
+--   sidebars = {"qf", "vista_kind", "terminal", "packer"},
+-- 
+-- })
 
 -- Hightlight yanked text in Neovim >= 0.5
 cmd 'au TextYankPost * lua vim.highlight.on_yank {on_visual = true}'
@@ -75,7 +81,7 @@ opt.cursorline = true                               -- highlight current line
 opt.hidden = true                                   -- background buffers
 opt.ignorecase = true
 opt.smartcase = true
-opt.smartindent = false
+opt.smartindent = true
 opt.splitbelow = true
 opt.splitright = true
 opt.expandtab = true                                -- tabs to spaces
@@ -85,6 +91,7 @@ opt.showcmd = true
 opt.lazyredraw = true
 opt.backup = false
 opt.writebackup = false
+opt.swapfile = false
 opt.mouse = 'a'                                     -- enable mouse support
 opt.signcolumn = 'yes'
 opt.formatoptions = 'crqnj'                         -- automatic formatting options
@@ -143,6 +150,8 @@ require('packer').startup(function()
     use 'mcchrish/zenbones.nvim'
     use 'rose-pine/neovim'
     use 'EdenEast/nightfox.nvim'
+    use 'marko-cerovac/material.nvim'
+    use 'projekt0n/github-nvim-theme'
 
     use 'lifepillar/vim-colortemplate'
 
@@ -163,7 +172,7 @@ require('packer').startup(function()
     -- Git
     use 'TimUntersberger/neogit'
     use 'sindrets/diffview.nvim'
-    use 'kdheepak/lazygit.nvim'
+    --use 'kdheepak/lazygit.nvim'
     use { 'lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }}
 
     -- Code
@@ -188,7 +197,7 @@ require('packer').startup(function()
 
     -- Navigation
     use 'phaazon/hop.nvim'
-    use 'ggandor/lightspeed.nvim'
+    -- use 'ggandor/lightspeed.nvim'
 
     -- Helper
     use 'folke/which-key.nvim'
@@ -401,7 +410,8 @@ require('nvim-treesitter.configs').setup {
         enable = true
     },
     indent = {
-        enable = true
+        enable = true,
+        disable = { 'hcl', 'terraform' }
     },
     ensure_installed = "maintained",
 }
@@ -534,11 +544,14 @@ vim.api.nvim_exec(
 -- }, wk_options)
 
 -- nvim tree
-g.nvim_tree_side = 'left'
-g.nvim_tree_width = 30
-g.nvim_tree_quit_on_open = 0
-g.nvim_tree_disable_netrw = 0
-g.nvim_tree_gitignore = 1
+require('nvim-tree').setup {
+    disable_netrw = false,
+    gitignore = true,
+    view = {
+        side = 'left',
+        width = 30,
+    }
+}
 
 --
 -- Keymappings / keybindings
@@ -561,9 +574,9 @@ tnoremap <c-l> <c-\><c-n><c-w>l
 tnoremap <leader><esc> <c-\><c-n>
 ]], true)
 
-require('lightspeed').setup {
-
-}
+-- require('lightspeed').setup {
+-- 
+-- }
 
 require('focus').setup {
     signcolumn = false
@@ -579,9 +592,13 @@ map('n', '<leader>w', '<cmd>:w!<CR>', map_options)
 map('n', '<leader>t', '<cmd>:terminal<CR>', map_options)
 map('n', '<leader>q', '<cmd>:bd<CR>', map_options)
 map('n', '<leader>Q', '<cmd>:qa!<CR>', map_options)
+map('n', '<leader>n', '<cmd>:NvimTreeToggle<CR>', map_options)
 
--- map('n', 's', '<cmd>:HopChar2<CR>', {silent = true})
--- map('n', 'S', '<cmd>:HopWord<CR>', {silent = true})
+-- Backspace to toggle previous buffer
+vim.api.nvim_set_keymap('n', '<bs>', '<c-^>\'”zz', { silent = true, noremap = true })
+
+map('n', 's', '<cmd>:HopChar2<CR>', {silent = true})
+map('n', 'S', '<cmd>:HopWord<CR>', {silent = true})
 -- map('t', '<leader>t', '<cmd>:ToggleTerm<CR>', map_options)
 map('t', '<ESC>', '&filetype == "fzf" ? "\\<ESC>" : "\\<C-\\>\\<C-n>"' , {expr = true})
 
