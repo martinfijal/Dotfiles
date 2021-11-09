@@ -143,15 +143,15 @@ require('packer').startup(function()
 
     -- Colorschemes
 --     use 'cideM/yui'
-    use 'shaunsingh/nord.nvim'
     use 'Mofiqul/vscode.nvim'
-    use 'igungor/schellar'
     use {'martinfijal/vem-dark', branch='personal-changes'}
-    use 'mcchrish/zenbones.nvim'
-    use 'rose-pine/neovim'
-    use 'EdenEast/nightfox.nvim'
     use 'marko-cerovac/material.nvim'
     use 'projekt0n/github-nvim-theme'
+    use {
+        "ViViDboarder/wombat.nvim",
+        requires = "rktjmp/lush.nvim"
+    }
+    use 'rmehri01/onenord.nvim'
 
     use 'lifepillar/vim-colortemplate'
 
@@ -410,7 +410,7 @@ require('nvim-treesitter.configs').setup {
         enable = true
     },
     indent = {
-        enable = true,
+        enable = false,
         disable = { 'hcl', 'terraform' }
     },
     ensure_installed = "maintained",
