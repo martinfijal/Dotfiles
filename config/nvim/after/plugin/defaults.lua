@@ -9,6 +9,12 @@ vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.softtabstop = 4
 vim.o.expandtab = true
+vim.o.smartindent = true
+
+vim.o.swapfile = false
+vim.o.backup = false
+vim.o.undodir = os.getenv("HOME") .. "/.vim/undodir"
+vim.o.undofile = true
 
 vim.o.timeoutlen = 250
 
@@ -44,6 +50,23 @@ vim.keymap.set('t', '<C-l>', '<c-\\><c-n><c-w>l', {desc='Window right [C-l]'})
 vim.keymap.set('t', '<C-j>', '<c-\\><c-n><c-w>j', {desc='Window down [C-j]'})
 vim.keymap.set('t', '<C-k>', '<c-\\><c-n><c-w>k', {desc='Window up [C-k]'})
 
+-- Move lines in visual mode
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+
+-- harpoon
+-- local mark = require("harpoon.mark")
+-- local ui = require("harpoon.ui")
+--
+-- vim.keymap.set("n", "<leader>a", mark.add_file)
+-- vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+--
+-- vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
+-- vim.keymap.set("n", "<C-t>", function() ui.nav_file(2) end)
+-- vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
+-- vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
+
+
 -- Sane escape in terminal
 vim.keymap.set('t', '<ESC>', '&filetype == "fzf" ? "\\<ESC>" : "\\<C-\\>\\<C-n>"' , {expr = true})
 
@@ -51,6 +74,10 @@ local noresil = { noremap = true, silent = true}
 local wk = require("which-key")
 
 wk.register({
+  c = {
+    name = 'comment',
+    c = {'<cmd>gc<CR>', 'Toggle linewise [gc]'},
+  },
   b = {
     name = 'buffer',
     d = {'<cmd>:bd<CR>', 'Delete buffer [<SPC-q>]'},

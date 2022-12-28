@@ -61,8 +61,9 @@ return function(use)
     end
   }
 
-  -- Ctrlp
+  -- Navigation
   use 'ctrlpvim/ctrlp.vim'
+  use 'theprimeagen/harpoon'
 
   -- Auto complete extensions
   use 'hrsh7th/cmp-buffer'

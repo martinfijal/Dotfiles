@@ -273,7 +273,7 @@ require('nvim-treesitter.configs').setup {
     swap = {
       enable = true,
       swap_next = {
-        ['<leader>a'] = '@parameter.inner',
+        --['<leader>a'] = '@parameter.inner',
       },
       swap_previous = {
         ['<leader>A'] = '@parameter.inner',
@@ -343,7 +343,7 @@ require('mason').setup()
 -- Enable the following language servers
 -- Feel free to add/remove any LSPs that you want here. They will automatically be installed
 -- local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'gopls' }
-local servers = { 'pyright', 'tsserver', 'gopls' }
+local servers = { 'pyright', 'tsserver', 'gopls', 'tsserver' }
 
 -- Ensure the servers above are installed
 require('mason-lspconfig').setup {
