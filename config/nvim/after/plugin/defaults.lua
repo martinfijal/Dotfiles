@@ -5,11 +5,18 @@ vim.o.hlsearch = true
 vim.o.scrolloff = 5
 vim.o.sidescrolloff = 8
 
+vim.o.laststatus = 2
+vim.o.cmdheight = 0  -- Combine command and status bars
+vim.o.shortmess = "filnxtToOFWIcC"
+
 vim.o.shiftwidth = 4
 vim.o.tabstop = 4
 vim.o.softtabstop = 4
 vim.o.expandtab = true
 vim.o.smartindent = true
+
+vim.o.splitbelow = true -- Put new windows below current
+vim.o.splitright = true -- Put new windows right of current
 
 vim.o.swapfile = false
 vim.o.backup = false
@@ -19,6 +26,9 @@ vim.o.undofile = true
 vim.o.timeoutlen = 250
 
 vim.o.listchars = 'tab:>·,extends:>,precedes:<'
+
+vim.o.wildmode = "longest:full,full" -- Command-line completion mode
+vim.o.completeopt = "menu,menuone,noselect"
 -- vim.o.fillchars = { eob = "~" }
 
 -- vim.o.wildignore = {"*/.git/*", "*/node_modules/*", "*__pycache__*", "*.pyc"}
@@ -80,7 +90,9 @@ wk.register({
   },
   b = {
     name = 'buffer',
+    c = {'<cmd>:close<CR>', 'Close buffer'},
     d = {'<cmd>:bd<CR>', 'Delete buffer [<SPC-q>]'},
+    l = {'<cmd>:Telescope buffers<CR>', 'List buffers' },
     x = {'<cmd>:BufDel<CR>', 'Remove buffer [<SPC-x>]'},
     w = {'<cmd>:w!<CR>', 'Save buffer [<SPC-w>]'},
   },
@@ -95,15 +107,63 @@ wk.register({
     name = 'git',
     g = {'<cmd>Neogit<CR>', 'Neogit'},
   },
+  h = {
+    name = "+help",
+    t = { "<cmd>:Telescope builtin<cr>", "Telescope" },
+    c = { "<cmd>:Telescope commands<cr>", "Commands" },
+    h = { "<cmd>:Telescope help_tags<cr>", "Help Pages" },
+    m = { "<cmd>:Telescope man_pages<cr>", "Man Pages" },
+    k = { "<cmd>:Telescope keymaps<cr>", "Key Maps" },
+    s = { "<cmd>:Telescope highlights<cr>", "Search Highlight Groups" },
+    l = { vim.show_pos, "Highlight Groups at cursor" },
+    f = { "<cmd>:Telescope filetypes<cr>", "File Types" },
+    o = { "<cmd>:Telescope vim_options<cr>", "Options" },
+    a = { "<cmd>:Telescope autocommands<cr>", "Auto Commands" },
+    p = {
+      name = "+packer",
+      p = { "<cmd>PackerSync<cr>", "Sync" },
+      s = { "<cmd>PackerStatus<cr>", "Status" },
+      i = { "<cmd>PackerInstall<cr>", "Install" },
+      c = { "<cmd>PackerCompile<cr>", "Compile" },
+    },
+  },
   l = {
-    name = 'lsp',
+    name = '+lsp',
+    a = {vim.lsp.buf.code_action, '[C]ode [A]ction'},
+    r = {vim.lsp.buf.rename, '[R]e[n]ame'},
+    t = {'<cmd>TroubleToggle<CR>', 'Toggle trouble'},
+    s = {
+      function()
+        require("telescope.builtin").lsp_document_symbols({
+          symbols = {
+            "Class",
+            "Function",
+            "Method",
+            "Constructor",
+            "Interface",
+            "Module",
+            "Struct",
+            "Trait",
+            "Field",
+            "Property",
+          },
+        })
+      end,
+      "Goto Symbol",
+    },
+  },
+  s = {
+    name = '+search',
+    b = { "<cmd>Telescope current_buffer_fuzzy_find<cr>", "Buffer" },
+    h = { "<cmd>Telescope command_history<cr>", "Command History" },
+    m = { "<cmd>Telescope marks<cr>", "Jump to Mark" },
   },
   t = {
-    name = "terminal",
+    name = "+terminal",
     t = {"<cmd>terminal<CR>", "Start terminal"},
   },
   w = {
-    name = "windows",
+    name = "+windows",
     h = {"<C-w>h", 'window left'},
     j = {"<C-w>j", 'window down'},
     k = {"<C-w>k", 'window up'},
@@ -118,6 +178,7 @@ wk.register({
     ['='] = {"<C-w>=", 'balance window'},
 
   },
+  z = { [[<cmd>ZenMode<cr>]], "Zen Mode" },
 }, { prefix = "<leader>" })
 
 
@@ -144,6 +205,26 @@ vim.api.nvim_create_autocmd({"BufWinEnter", "WinEnter"}, {
 vim.api.nvim_create_autocmd({"BufLeave"}, {
   pattern = {"term://*"},
   command = "stopinsert",
+})
+
+
+-- Close certain file types with q
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = {
+    "qf",
+    "help",
+    "man",
+    "notify",
+    "lspinfo",
+    "spectre_panel",
+    "startuptime",
+    "tsplayground",
+    "PlenaryTestPopup",
+  },
+  callback = function(event)
+    vim.bo[event.buf].buflisted = false
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+  end,
 })
 
 
