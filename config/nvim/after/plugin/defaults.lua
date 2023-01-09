@@ -29,6 +29,8 @@ vim.o.listchars = 'tab:>·,extends:>,precedes:<'
 
 vim.o.wildmode = "longest:full,full" -- Command-line completion mode
 vim.o.completeopt = "menu,menuone,noselect"
+
+vim.o.clipboard = 'unnamedplus'
 -- vim.o.fillchars = { eob = "~" }
 
 -- vim.o.wildignore = {"*/.git/*", "*/node_modules/*", "*__pycache__*", "*.pyc"}
