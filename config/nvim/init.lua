@@ -238,7 +238,7 @@ require('nvim-treesitter.configs').setup {
   },
 
   highlight = { enable = true },
-  indent = { enable = true },
+  indent = { enable = false },
   incremental_selection = {
     enable = true,
     keymaps = {
@@ -355,7 +355,7 @@ require('mason').setup()
 -- Enable the following language servers
 -- Feel free to add/remove any LSPs that you want here. They will automatically be installed
 -- local servers = { 'clangd', 'rust_analyzer', 'pyright', 'tsserver', 'sumneko_lua', 'gopls' }
-local servers = { 'pyright', 'tsserver', 'gopls', 'sumneko_lua' }
+local servers = { 'pyright', 'tsserver', 'gopls', 'lua_ls' }
 
 -- Ensure the servers above are installed
 require('mason-lspconfig').setup {
