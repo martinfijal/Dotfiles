@@ -1,7 +1,0 @@
-{
-    "go.goplsOptions": {
-        "completeUnimported": true
-    },
-
-    "coc.preferences.formatOnSaveFiletypes": ["go"]
-}
